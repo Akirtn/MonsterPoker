@@ -1,14 +1,35 @@
 import java.util.Random;
 import java.util.Scanner;
 
+
 /**
  * MonsterPoker
  */
 public class MonsterPoker {
 
+  HP p11 =new HP();
+  public void Deck_init(int i){
+    for (int j = i + 1; j < this.cpuDeck.length; j++) {
+          if (this.cpuDeck[i] == this.cpuDeck[j]) {
+            this.cpuExchangeCards[i] = 0;
+            this.cpuExchangeCards[j] = 0;
+          }
+        }
+  }
+  public void Cpu_damage_calc(){
+        if (this.DP >= this.p17) {
+      System.out.println("CPUはノーダメージ！");
+      return;
+    } 
+      double damage = this.p17 - this.DP;
+      System.out.printf("CPUは%.0fのダメージを受けた！\n", damage);
+      this.c12 = this.c12 - damage;
+      return;
+    
+  }
   Random card = new Random();
 
-  double p11 = 1000; //PlayerのHP
+  // double p11 = 1000; //PlayerのHP
   double c12 = 1000; //cpuのHP
   int playerDeck[] = new int[5]; // 0~4までの数字（モンスターID）が入る
   int cpuDeck[] = new int[5];
@@ -26,7 +47,7 @@ public class MonsterPoker {
   double c15 = 1;// CPUの役によるAP倍率．1.5倍の場合は1.5となる
   double c16 = 1;
   double c17 = 0;
-  double c18 = 0;
+  double DP = 0;
   // 役判定用フラグ
   // 役判定
   // 5が1つある：ファイブ->five = true
@@ -111,19 +132,20 @@ public class MonsterPoker {
     }
     for (int i = 0; i < this.cpuDeck.length; i++) {
       if (this.cpuExchangeCards[i] == -1) {
-        for (int j = i + 1; j < this.cpuDeck.length; j++) {
-          if (this.cpuDeck[i] == this.cpuDeck[j]) {
-            this.cpuExchangeCards[i] = 0;
-            this.cpuExchangeCards[j] = 0;
-          }
-        }
+        Deck_init(i);
+        // for (int j = i + 1; j < this.cpuDeck.length; j++) {
+        //   if (this.cpuDeck[i] == this.cpuDeck[j]) {
+        //     this.cpuExchangeCards[i] = 0;
+        //     this.cpuExchangeCards[j] = 0;
+        //   }
+        // }
         if (this.cpuExchangeCards[i] != 0) {
           this.cpuExchangeCards[i] = this.card.nextInt(2);// 交換するかどうかをランダムに最終決定する
           // this.cpuExchangeCards[i] = 1;
         }
       }
     }
-
+  
     // 交換するカード番号の表示
     this.c13 = "";
     for (int i = 0; i < cpuExchangeCards.length; i++) {
@@ -361,11 +383,11 @@ public class MonsterPoker {
     for (int i = 0; i < cpuYaku.length; i++) {
       if (cpuYaku[i] >= 1) {
         this.c17 = this.c17 + this.monsterAp[i] * cpuYaku[i];
-        this.c18 = this.c18 + this.monsterDp[i] * cpuYaku[i];
+        this.DP = this.DP + this.monsterDp[i] * cpuYaku[i];
       }
     }
     this.c17 = this.c17 * this.c15;
-    this.c18 = this.c18 * this.c16;
+    this.DP = this.DP * this.c16;
 
     // バトル
     System.out.println("バトル！！");
@@ -380,13 +402,14 @@ public class MonsterPoker {
     System.out.print("の攻撃！");
     Thread.sleep(1000);
     System.out.println("CPUのモンスターによるガード！");
-    if (this.c18 >= this.p17) {
-      System.out.println("CPUはノーダメージ！");
-    } else {
-      double damage = this.p17 - this.c18;
-      System.out.printf("CPUは%.0fのダメージを受けた！\n", damage);
-      this.c12 = this.c12 - damage;
-    }
+    Cpu_damage_calc();
+    // if (this.DP >= this.p17) {
+    //   System.out.println("CPUはノーダメージ！");
+    // } else {
+    //   double damage = this.p17 - this.DP;
+    //   System.out.printf("CPUは%.0fのダメージを受けた！\n", damage);
+    //   this.c12 = this.c12 - damage;
+    // }
 
     // CPUの攻撃
     System.out.print("CPUのDrawした");
@@ -404,7 +427,7 @@ public class MonsterPoker {
     } else {
       double damage = this.c17 - this.p18;
       System.out.printf("Playerは%.0fのダメージを受けた！\n", damage);
-      this.p11 = this.p11 - damage;
+      p11.hp = p11.hp- damage;
     }
 
     System.out.println("PlayerのHPは" + this.p11);
@@ -413,7 +436,7 @@ public class MonsterPoker {
   }
 
   public double getPlayerHp() {
-    return this.p11;
+    return p11.hp;
   }
 
   public double getCpuHp() {
