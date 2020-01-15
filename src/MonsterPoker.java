@@ -5,6 +5,7 @@ import java.util.Scanner;
 /**
  * MonsterPoker
  */
+
 public class MonsterPoker {
 
   HP p11 =new HP();
@@ -26,6 +27,20 @@ public class MonsterPoker {
       this.c12 = this.c12 - damage;
       return;
     
+  }
+  public boolean show_Jdgement(){
+
+    if (this.p11.hp <= 0 && this.c12 <= 0) {
+      System.out.println("引き分け！");
+      return true ;
+    }  if (p11.hp <= 0) {
+      System.out.println("CPU Win!");
+      return true;
+    } if (this.c12 <= 0) {
+      System.out.println("Player Win!");
+     return true;      
+    }
+    return false;
   }
   Random card = new Random();
 
